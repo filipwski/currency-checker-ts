@@ -3,7 +3,9 @@ import { Currency } from '../Model/Currency'
 
 interface CurrencyData {
     base: string
-    rates: {}
+    rates: {
+        [key: string]: number
+    }
     date: Date
 }
 
@@ -22,25 +24,21 @@ export class CurrencyProvider implements CurrencyProviding {
     ]
 
     async fetchCurrencyData(targetCurrencyName: string): Promise <Currency> {
-        try {
-            const currencyData: CurrencyData = await Axios.get(
-                'https://api.exchangeratesapi.io/latest?base=USD'
-            ).then(
-                response => {
-                    return response.data
-                }
-            )
-            const baseCurrencyName = currencyData.base
-            const targetCurrencyValue = currencyData.rates[targetCurrencyName]
-            const date = currencyData.date
-            return {
-                baseCurrencyName: baseCurrencyName,
-                targetCurrencyName: targetCurrencyName,
-                targetCurrencyValue: targetCurrencyValue,
-                date: date
+        const currencyData: CurrencyData = await Axios.get(
+            'https://api.exchangeratesapi.io/latest?base=USD'
+        ).then(
+            response => {
+                return response.data
             }
-        } catch (error) {
-            console.error(error)
+        )
+        const baseCurrencyName = currencyData.base
+        const targetCurrencyValue = currencyData.rates[targetCurrencyName]
+        const date = currencyData.date
+        return {
+            baseCurrencyName: baseCurrencyName,
+            targetCurrencyName: targetCurrencyName,
+            targetCurrencyValue: targetCurrencyValue,
+            date: date
         }
     }
 

@@ -9,11 +9,11 @@ interface CurrencyData {
     date: Date
 }
 
-export interface CurrencyProviding {
-    fetchCurrencyData(targetCurrencyName: string): Promise <Currency>
+export interface CurrencyDataProviding {
+    fetchCurrencyData(baseCurrencyName: string, targetCurrencyName: string): Promise <Currency>
 }
 
-export class CurrencyProvider implements CurrencyProviding {
+export class CurrencyDataProvider implements CurrencyDataProviding {
 
     readonly availableCurrencies = [
         'CAD', 'HKD', 'ISK', 'PHP', 'DKK', 'HUF', 'CZK',
@@ -23,17 +23,18 @@ export class CurrencyProvider implements CurrencyProviding {
         'SGD', 'AUD', 'ILS', 'KRW', 'PLN'
     ]
 
-    async fetchCurrencyData(targetCurrencyName: string): Promise <Currency> {
-        const currencyData: CurrencyData = await Axios.get(
-            'https://api.exchangeratesapi.io/latest?base=USD'
-        ).then(
+    async fetchCurrencyData(baseCurrencyName: string, targetCurrencyName: string): Promise <Currency> {
+        const url = `https://api.exchangeratesapi.io/latest?base=${baseCurrencyName}`
+        
+        const currencyData: CurrencyData = await Axios.get(url).then(
             response => {
                 return response.data
             }
         )
-        const baseCurrencyName = currencyData.base
+
         const targetCurrencyValue = currencyData.rates[targetCurrencyName]
         const date = currencyData.date
+        
         return {
             baseCurrencyName: baseCurrencyName,
             targetCurrencyName: targetCurrencyName,
@@ -41,11 +42,4 @@ export class CurrencyProvider implements CurrencyProviding {
             date: date
         }
     }
-
 }
-
-(async () => {
-    const provider = new CurrencyProvider()
-    const data = await provider.fetchCurrencyData(provider.availableCurrencies[32])
-    console.log(data)
-})()

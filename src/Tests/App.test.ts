@@ -1,6 +1,6 @@
-import { Currency } from './../Model/Currency';
 import { CurrencyDataProviding } from './../Provider/CurrencyDataProvider';
 import { CurrencyDataProvider } from "../Provider/CurrencyDataProvider"
+import { element } from 'prop-types';
 
 describe("Data provider unit tests", () => {
   let provider: CurrencyDataProviding
@@ -28,5 +28,27 @@ describe("Data provider unit tests", () => {
     await provider.fetchCurrencyData('ABC', 'DEF')
 
     return expect(console.error).toBeCalled()
+  })
+})
+
+describe('App E2E tests', () => {
+  beforeAll(async () => {
+    await page.goto('http://localhost:3000')
+  })
+  it('App has proper name', async () => {
+    await expect(page.title()).resolves.toMatch('Currency checker')
+  })
+  it('All values should be initially equal \'...\'', async () => {
+    const initialValues = [
+      'Base currency: ...',
+      'Target currency: ...',
+      'Value: ...',
+      'Check date: ...'
+    ]
+
+    await expect(page).toMatch(initialValues[0])
+    await expect(page).toMatch(initialValues[1])
+    await expect(page).toMatch(initialValues[2])
+    await expect(page).toMatch(initialValues[3])
   })
 })

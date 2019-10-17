@@ -1,4 +1,4 @@
-Simple currency checked app baked using TypeScript and React.
+Simple currency checker app baked using TypeScript and React.
 
 ## Available Scripts
 
@@ -6,6 +6,6 @@ Simple currency checked app baked using TypeScript and React.
 
 To run the project.
 
-### `npm jest`
+### `jest`
 
 To run all tests.

@@ -44,7 +44,7 @@ class App extends Component {
 
     const { baseCurrencyName, targetCurrencyName } = this.state
 
-    if(baseCurrencyName != '...' && targetCurrencyName != '...') {
+    if(baseCurrencyName !== '...' && targetCurrencyName !== '...') {
       this.fetchCurrencyValue(baseCurrencyName, targetCurrencyName)
     }
 

@@ -1,12 +1,12 @@
 import Axios from 'axios'
 import { Currency } from '../Model/Currency'
 
-interface CurrencyData {
+export interface CurrencyData {
     base: string
     rates: {
         [key: string]: number
     }
-    date: Date
+    date: string
 }
 
 export interface CurrencyDataProviding {
@@ -24,16 +24,23 @@ export class CurrencyDataProvider implements CurrencyDataProviding {
     ]
 
     async fetchCurrencyData(baseCurrencyName: string, targetCurrencyName: string): Promise <Currency> {
+        let currencyData: CurrencyData
+        let targetCurrencyValue: number
+        let date: string
+
         const url = `https://api.exchangeratesapi.io/latest?base=${baseCurrencyName}`
         
-        const currencyData: CurrencyData = await Axios.get(url).then(
-            response => {
-                return response.data
-            }
-        )
-
-        const targetCurrencyValue = currencyData.rates[targetCurrencyName]
-        const date = currencyData.date
+        try {
+            currencyData = await Axios.get(url).then(
+                response => {
+                    return response.data
+                }
+            )
+            targetCurrencyValue = currencyData.rates[targetCurrencyName]
+            date = currencyData.date
+        } catch(error) {
+            console.error(error)
+        }
         
         return {
             baseCurrencyName: baseCurrencyName,
